@@ -213,7 +213,54 @@ class LivroRepositoryTest {
         var isbn = "90887-84874"; //90887-84874
         var tituloPesquisa = "Terceiro livro";
 
-        List<Livro> lista = repository.findByTituloOrIsbn(tituloPesquisa, isbn);
+        List<Livro> lista = repository.findByTituloOrIsbnOrderByTitulo(tituloPesquisa, isbn);
         lista.forEach(System.out::println);
+    }
+
+
+    @Test
+    void listarLivrosComQueryJPQL() {
+        var resultado = repository.listarTodosOrdenadoPorTituloAndPreco();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarAutoresDosLivrosComQueryJPQL() {
+        var resultado = repository.listarAutoresDosLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarLivrosDiferentesComQueryJPQL() {
+        var resultado = repository.listarLivrosNomesDiferente();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarGenerosDeLivrosAutoresBrasileiros() {
+        var resultado = repository.listarGenerosAutoresBrasileiros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarGeneroQueryParamTest() {
+        var resultado = repository.findByGenero(GeneroLivro.FICCAO, "dataPublicacao");
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarGeneroPositionalParamTest() {
+        var resultado = repository.findByGeneroPositionalParameters(GeneroLivro.FICCAO, "dataPublicacao");
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void deletarPorGeneroTest() {
+        repository.deleteByGenero(GeneroLivro.FICCAO);
+    }
+
+    @Test
+    void updateDataPublicacaoTest() {
+        repository.updateDataPublicacao(LocalDate.of(2018, 1, 1));
     }
 }
