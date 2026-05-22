@@ -27,10 +27,10 @@ public class Livro {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "isbn", length = 20, nullable = false)
+    @Column(length = 20, nullable = false)
     private String isbn;
 
-    @Column(name = "titulo", length = 150, nullable = false)
+    @Column(length = 150, nullable = false)
     private String titulo;
 
     @Column(name = "data_publicacao")
@@ -42,7 +42,7 @@ public class Livro {
      * evita problemas se a ordem do enum mudar
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "genero", length = 30, nullable = false)
+    @Column(length = 30, nullable = false)
     private GeneroLivro genero;
 
     /**
