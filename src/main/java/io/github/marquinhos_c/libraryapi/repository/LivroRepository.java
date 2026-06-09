@@ -18,7 +18,6 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
 
     // Query Method
     //O nome do método tem que bater exatamente com o nome do atributo da entidade.
-
     // select * from livro where id_autor = ?
     List<Livro> findByAutor(Autor autor);
 
@@ -55,7 +54,6 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     // select distinct l.* from livro l
     @Query(" select distinct l.titulo from Livro l ")
     List<String> listarLivrosNomesDiferente();
-
     @Query("""
         select l.genero
         from Livro l
@@ -64,6 +62,7 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
         order by l.genero
     """)
     List<String> listarGenerosAutoresBrasileiros();
+
 
     // named parameters -> parametros nomeados
     @Query(" select l from Livro l where l.genero = :genero order by :paramOrdenacao")
@@ -80,10 +79,11 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     @Transactional
     @Query(" delete from Livro where genero = ?1 ")
     void deleteByGenero(GeneroLivro genero);
-
     @Modifying
     @Transactional
     @Query(" update Livro set dataPublicacao = ?1")
     void updateDataPublicacao(LocalDate novaData);
 
+    // verificar se existe se existe livro cadastrado com autor
+    boolean existsByAutor(Autor autor);
 }
