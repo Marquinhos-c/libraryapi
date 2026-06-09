@@ -1,8 +1,11 @@
 package io.github.marquinhos_c.libraryapi.service;
 
+import io.github.marquinhos_c.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.marquinhos_c.libraryapi.model.Autor;
 import io.github.marquinhos_c.libraryapi.repository.AutorRepository;
+import io.github.marquinhos_c.libraryapi.repository.LivroRepository;
 import io.github.marquinhos_c.libraryapi.validator.AutorValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,15 +13,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+// cria um construtor automatico em tempo de copilação
+@RequiredArgsConstructor
 public class AutorService {
 
     private final AutorRepository repository;
     private final AutorValidator validator;
-
-    public AutorService(AutorRepository repository, AutorValidator validator) {
-        this.repository = repository;
-        this.validator = validator;
-    }
+    private final LivroRepository livroRepository;
 
 
     public Autor salvar(Autor autor) {
@@ -39,6 +40,10 @@ public class AutorService {
     }
 
     public void deletar(Autor autor) {
+        if (possuiLivro(autor)) {
+            throw new OperacaoNaoPermitidaException(
+                    "Não é permitido excluir um Autor que possui livros cadastrados!");
+        }
         repository.delete(autor);
     }
 
@@ -57,5 +62,9 @@ public class AutorService {
         }
 
         return repository.findAll();
+    }
+
+    public boolean possuiLivro(Autor autor) {
+        return livroRepository.existsByAutor(autor);
     }
 }

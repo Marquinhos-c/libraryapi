@@ -3,18 +3,16 @@ package io.github.marquinhos_c.libraryapi.validator;
 import io.github.marquinhos_c.libraryapi.exceptions.RegistroDuplicadoException;
 import io.github.marquinhos_c.libraryapi.model.Autor;
 import io.github.marquinhos_c.libraryapi.repository.AutorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class AutorValidator {
 
     private AutorRepository repository;
-
-    public AutorValidator(AutorRepository repository) {
-        this.repository = repository;
-    }
 
     public void validar(Autor autor) {
         if (existeAutorCadastrado(autor)) {
