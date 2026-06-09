@@ -1,6 +1,8 @@
 package io.github.marquinhos_c.libraryapi.controller;
 
 import io.github.marquinhos_c.libraryapi.controller.dto.AutorDTO;
+import io.github.marquinhos_c.libraryapi.controller.dto.ErroResposta;
+import io.github.marquinhos_c.libraryapi.exceptions.RegistroDuplicadoException;
 import io.github.marquinhos_c.libraryapi.model.Autor;
 import io.github.marquinhos_c.libraryapi.service.AutorService;
 import org.springframework.http.ResponseEntity;
@@ -24,18 +26,24 @@ public class AutorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody AutorDTO autor) {
-        Autor autorEntidade = autor.mapearParaAutor();
-        autorService.salvar(autorEntidade);
+    public ResponseEntity<Object> salvar(@RequestBody AutorDTO autor) {
 
-        // http://localhost:8080/autores/76e7c418-ccf9-4e2a-af20-c28b9e50ab55
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(autorEntidade.getId())
-                .toUri();
+        try {
+            Autor autorEntidade = autor.mapearParaAutor();
+            autorService.salvar(autorEntidade);
 
-        return ResponseEntity.created(location).build();
+            // http://localhost:8080/autores/76e7c418-ccf9-4e2a-af20-c28b9e50ab55
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(autorEntidade.getId())
+                    .toUri();
+
+            return ResponseEntity.created(location).build();
+        } catch (RegistroDuplicadoException e) {
+            var errorDTO = ErroResposta.conflito(e.getMessage());
+            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
+        }
     }
 
 
