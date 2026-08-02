@@ -82,4 +82,3 @@ public class DatabaseConfiguration {
         return new HikariDataSource(config);
     }
 }
-
